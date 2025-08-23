@@ -23,10 +23,7 @@ export const fetchTransactions = (page) => async (dispatch) => {
   try {
     dispatch(setLoading(true))
     const data = await getTransactionsByUser(CURRENT_USER_ID, page)
-    dispatch(setTransactions({ 
-      transactions: data.transactions || [], 
-      totalPages: data.totalPages || 1 
-    }))
+    dispatch(setTransactions(data))
   } catch (error) {
     dispatch(setError('Failed to fetch transactions'))
   } finally {
@@ -35,16 +32,16 @@ export const fetchTransactions = (page) => async (dispatch) => {
 }
 
 // Search transactions
-export const searchTransactionsAction = (searchTerm) => async (dispatch) => {
+export const searchTransactionsAction = (query) => async (dispatch) => {
   try {
-    if (!searchTerm.trim()) {
+    if (!query.trim()) {
       dispatch(fetchTransactions(1))
       return
     }
     
     dispatch(setLoading(true))
-    const results = await searchTransactions(searchTerm, CURRENT_USER_ID)
-    dispatch(setSearchResults(results || []))
+    const results = await searchTransactions(query, CURRENT_USER_ID)
+    dispatch(setSearchResults(results))
   } catch (error) {
     dispatch(setError('Failed to search transactions'))
   } finally {
