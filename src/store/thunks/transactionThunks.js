@@ -1,3 +1,4 @@
+// src/store/thunks/transactionThunks.js
 import { getServerTime, getTransactionsByUser, searchTransactions } from '../../services/api'
 import { setLoading, setError, setServerTime } from '../slices/uiSlice'
 import { setTransactions, setSearchResults } from '../slices/transactionsSlice'
@@ -23,8 +24,8 @@ export const fetchTransactions = (page) => async (dispatch) => {
     dispatch(setLoading(true))
     const data = await getTransactionsByUser(CURRENT_USER_ID, page)
     dispatch(setTransactions({ 
-      transactions: data.transactions, 
-      totalPages: data.totalPages 
+      transactions: data.transactions || [], 
+      totalPages: data.totalPages || 1 
     }))
   } catch (error) {
     dispatch(setError('Failed to fetch transactions'))
@@ -43,7 +44,7 @@ export const searchTransactionsAction = (searchTerm) => async (dispatch) => {
     
     dispatch(setLoading(true))
     const results = await searchTransactions(searchTerm, CURRENT_USER_ID)
-    dispatch(setSearchResults(results))
+    dispatch(setSearchResults(results || []))
   } catch (error) {
     dispatch(setError('Failed to search transactions'))
   } finally {

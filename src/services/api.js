@@ -1,3 +1,4 @@
+// src/services/api.js
 import axios from 'axios'
 
 const API_BASE_URL = 'http://localhost:3000'
@@ -17,14 +18,26 @@ export const getServerTime = async () => {
 
 // Transactions API
 export const getTransactionsByUser = async (userId, page = 1) => {
-  const response = await api.get(`/transactions/find-by-user?userId=${userId}&p=${page}`)
-  return response.data
+  try {
+    const response = await api.get(`/transactions/find-by-user?userId=${userId}&p=${page}`)
+    console.log('Transactions API response:', response.data)
+    return response.data || { transactions: [], totalPages: 1 }
+  } catch (error) {
+    console.error('Error fetching transactions:', error)
+    return { transactions: [], totalPages: 1 }
+  }
 }
 
-export const searchTransactions = async (searchTerm, userId) => {
-  const response = await api.post('/transactions/search', {
-    searchTerm,
-    userId,
-  })
-  return response.data
+export const searchTransactions = async (query, userId) => {
+  try {
+    const response = await api.post('/transactions/search', {
+      query,
+      userId,
+    })
+    console.log('Search API response:', response.data)
+    return response.data || []
+  } catch (error) {
+    console.error('Error searching transactions:', error)
+    return []
+  }
 }

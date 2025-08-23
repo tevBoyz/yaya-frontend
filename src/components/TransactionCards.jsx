@@ -1,7 +1,11 @@
+// src/components/TransactionCards.jsx
 import { ArrowUp, ArrowDown } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 const TransactionCards = ({ transactions, currentUserId }) => {
+  // Ensure transactions is always an array
+  const safeTransactions = Array.isArray(transactions) ? transactions : []
+  
   const getTransactionType = (transaction) => {
     if (transaction.sender === transaction.receiver) return 'top-up'
     return transaction.receiver === currentUserId ? 'incoming' : 'outgoing'
@@ -17,9 +21,17 @@ const TransactionCards = ({ transactions, currentUserId }) => {
     })
   }
 
+  if (safeTransactions.length === 0) {
+    return (
+      <div className="text-center p-8 md:hidden">
+        <p>No transactions found.</p>
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-4 md:hidden">
-      {transactions.map((transaction) => {
+      {safeTransactions.map((transaction) => {
         const type = getTransactionType(transaction)
         return (
           <Card key={transaction.id}>
