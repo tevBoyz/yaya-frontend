@@ -1,11 +1,14 @@
-import Dashboard from "./components/Dashboard"
+import { ThemeProvider } from "./contexts/ThemeContext";
+import Dashboard from "./components/Dashboard";
 
 function App() {
   return (
-    <div className="min-h-screen bg-background">
-      <Dashboard />
-    </div>
-  )
+    <ThemeProvider>
+      <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
+        <Dashboard />
+      </div>
+    </ThemeProvider>
+  );
 }
 
-export default App
+export default App;

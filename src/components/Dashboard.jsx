@@ -1,11 +1,13 @@
 // src/components/Dashboard.jsx
-import { useEffect } from "react"
+import { useEffect, useCallback } from "react"
 import { useDispatch, useSelector } from "react-redux"
+import { debounce } from "lodash"
 
 import TransactionTable from "./TransactionTable"
 import TransactionCards from "./TransactionCards"
 import TransactionPagination from "./TransactionPagination"
 import SearchBar from "./SearchBar"
+import ThemeToggle from "./ThemeToggle"
 import { Button } from "@/components/ui/button"
 import { ReloadIcon } from "@radix-ui/react-icons"
 import { fetchServerTime, fetchTransactions, searchTransactionsAction } from "../store/thunks/transactionThunks"
@@ -25,28 +27,36 @@ const Dashboard = () => {
     dispatch(fetchTransactions(1))
   }, [dispatch])
 
-  const handlePageChange = (page) => {
+  // Debounced search to prevent rapid API calls
+  const debouncedSearch = useCallback(
+    debounce((searchTerm) => {
+      if (searchTerm.trim()) {
+        dispatch(searchTransactionsAction(searchTerm))
+        dispatch(setCurrentPage(1))
+      } else {
+        dispatch(clearSearch())
+        dispatch(fetchTransactions(1))
+      }
+    }, 300),
+    [dispatch]
+  )
+
+  const handleSearch = (searchTerm) => {
+    debouncedSearch(searchTerm)
+  }
+
+  const handlePageChange = useCallback((page) => {
     dispatch(setCurrentPage(page))
     if (!isSearchMode) {
       dispatch(fetchTransactions(page))
     }
-  }
+  }, [dispatch, isSearchMode])
 
-  const handleSearch = (searchTerm) => {
-    if (searchTerm.trim()) {
-      dispatch(searchTransactionsAction(searchTerm))
-      dispatch(setCurrentPage(1)) // Reset to first page when searching
-    } else {
-      dispatch(clearSearch())
-      dispatch(fetchTransactions(1))
-    }
-  }
-
-  const handleRefresh = () => {
+  const handleRefresh = useCallback(() => {
     dispatch(clearSearch())
     dispatch(fetchTransactions(1))
     dispatch(fetchServerTime())
-  }
+  }, [dispatch])
 
   // Safely get display transactions
   const displayTransactions = isSearchMode ? (searchResults || []) : (transactions || [])
@@ -65,10 +75,13 @@ const Dashboard = () => {
             </p>
           )}
         </div>
-        <Button onClick={handleRefresh} disabled={isLoading}>
-          {isLoading ? <ReloadIcon className="mr-2 h-4 w-4 animate-spin" /> : null}
-          Refresh
-        </Button>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <Button onClick={handleRefresh} disabled={isLoading}>
+            {isLoading ? <ReloadIcon className="mr-2 h-4 w-4 animate-spin" /> : null}
+            Refresh
+          </Button>
+        </div>
       </div>
 
       {error && (
