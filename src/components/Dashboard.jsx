@@ -1,5 +1,5 @@
 // src/components/Dashboard.jsx
-import { useEffect, useCallback } from "react"
+import { useEffect, useCallback, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { debounce } from "lodash"
 
@@ -13,19 +13,42 @@ import { ReloadIcon } from "@radix-ui/react-icons"
 import { fetchServerTime, fetchTransactions, searchTransactionsAction } from "../store/thunks/transactionThunks"
 import { setCurrentPage, clearSearch } from "../store/slices/transactionsSlice"
 
-const CURRENT_USER_ID = "123"
+const CURRENT_USER_ID = "b7a2ed94-cb41-4298-8407-cba5e9575d59"
 
 const Dashboard = () => {
   const dispatch = useDispatch()
-  const { transactions, searchResults, currentPage, totalPages, isSearchMode } = useSelector(
-    (state) => state.transactions
-  )
+  const { 
+    transactions, 
+    searchResults, 
+    currentPage, 
+    totalPages, 
+    totalItems,
+    perPage,
+    incomingSum,
+    outgoingSum,
+    isSearchMode 
+  } = useSelector((state) => state.transactions)
+  
   const { isLoading, error, serverTime } = useSelector((state) => state.ui)
+  const [liveTime, setLiveTime] = useState(null)
 
   useEffect(() => {
     dispatch(fetchServerTime())
     dispatch(fetchTransactions(1))
   }, [dispatch])
+
+  useEffect(() => {
+    if (serverTime) {
+      const serverDate = new Date(serverTime)
+      setLiveTime(serverDate)
+
+      const interval = setInterval(() => {
+        setLiveTime((prev) => new Date(prev.getTime() + 1000)) // increment by 1s
+      }, 1000)
+
+      return () => clearInterval(interval)
+    }
+  }, [serverTime])
 
   // Debounced search to prevent rapid API calls
   const debouncedSearch = useCallback(
@@ -71,7 +94,7 @@ const Dashboard = () => {
           <h1 className="text-3xl font-bold">Transaction Dashboard</h1>
           {serverTime && (
             <p className="text-sm text-muted-foreground">
-              Server Time: {new Date(serverTime).toLocaleString()}
+              Server Time: {new Date(liveTime).toLocaleString()}
             </p>
           )}
         </div>
@@ -83,6 +106,8 @@ const Dashboard = () => {
           </Button>
         </div>
       </div>
+
+  
 
       {error && (
         <div className="bg-destructive/15 text-destructive p-3 rounded-md">

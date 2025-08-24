@@ -7,12 +7,13 @@ const TransactionCards = ({ transactions, currentUserId }) => {
   const safeTransactions = Array.isArray(transactions) ? transactions : []
   
   const getTransactionType = (transaction) => {
-    if (transaction.sender === transaction.receiver) return 'top-up'
-    return transaction.receiver === currentUserId ? 'incoming' : 'outgoing'
+    if (transaction.is_topup) return 'top-up';
+    if (transaction.is_outgoing_transfer) return 'outgoing';
+    return transaction.receiver.account === currentUserId ? 'incoming' : 'outgoing';
   }
 
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+  const formatDate = (timestamp) => {
+    return new Date(timestamp * 1000).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
@@ -37,7 +38,7 @@ const TransactionCards = ({ transactions, currentUserId }) => {
           <Card key={transaction.id}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                {transaction.id}
+                {transaction.id.slice(0, 8)}...
               </CardTitle>
               <div>
                 {type === 'incoming' || type === 'top-up' ? (
@@ -51,23 +52,29 @@ const TransactionCards = ({ transactions, currentUserId }) => {
               <div className="grid grid-cols-2 gap-2 text-sm">
                 <div>
                   <p className="text-xs text-muted-foreground">From</p>
-                  <p>{transaction.sender}</p>
+                  <p className="font-medium">{transaction.sender.name}</p>
+                  <p className="text-xs text-muted-foreground">@{transaction.sender.account}</p>
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">To</p>
-                  <p>{transaction.receiver}</p>
+                  <p className="font-medium">{transaction.receiver.name}</p>
+                  <p className="text-xs text-muted-foreground">@{transaction.receiver.account}</p>
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">Amount</p>
-                  <p className={type === 'incoming' || type === 'top-up' ? 'text-green-500' : 'text-red-500'}>
-                    {type === 'incoming' || type === 'top-up' ? '+' : '-'}{transaction.amount} {transaction.currency}
+                  <p className={type === 'incoming' || type === 'top-up' ? 'text-green-500 font-medium' : 'text-red-500 font-medium'}>
+                    {type === 'incoming' || type === 'top-up' ? '+' : '-'}{transaction.amount_with_currency}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground">Date</p>
-                  <p>{formatDate(transaction.createdAt)}</p>
+                  <p className="text-xs text-muted-foreground">Fee</p>
+                  <p>{transaction.fee} {transaction.currency}</p>
                 </div>
-                <div className="col-span-2">
+                <div>
+                  <p className="text-xs text-muted-foreground">Date</p>
+                  <p>{formatDate(transaction.created_at_time)}</p>
+                </div>
+                <div>
                   <p className="text-xs text-muted-foreground">Cause</p>
                   <p>{transaction.cause}</p>
                 </div>

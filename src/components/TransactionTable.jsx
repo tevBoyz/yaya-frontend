@@ -1,4 +1,4 @@
-// src/components/TransactionTable.jsx
+import { useMemo, useCallback } from "react"
 import {
   Table,
   TableBody,
@@ -10,22 +10,28 @@ import {
 import { ArrowUp, ArrowDown } from "lucide-react"
 
 const TransactionTable = ({ transactions, currentUserId }) => {
-  // Ensure transactions is always an array
-  const safeTransactions = Array.isArray(transactions) ? transactions : []
+  // Memoize the processed transactions
+  const safeTransactions = useMemo(() => 
+    Array.isArray(transactions) ? transactions : []
+  , [transactions])
   
-  const getTransactionType = (transaction) => {
-    if (transaction.sender === transaction.receiver) return 'top-up'
-    return transaction.receiver === currentUserId ? 'incoming' : 'outgoing'
-  }
+  // Memoize the transaction type calculation
+  const getTransactionType = useCallback((transaction) => {
+    if (transaction.is_topup) return 'top-up';
+    if (transaction.is_outgoing_transfer) return 'outgoing';
+    return transaction.receiver.account === currentUserId ? 'incoming' : 'outgoing';
+  }, [currentUserId])
 
-  const formatDate = (timeStamp) => {
-    const date = new Date(timeStamp);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
-    const year = date.getFullYear();
-
-    return `${day}/${month}/${year}`;
-  }
+  // Memoize date formatting
+  const formatDate = useCallback((timestamp) => {
+    return new Date(timestamp * 1000).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+  }, [])
 
   if (safeTransactions.length === 0) {
     return (
@@ -62,8 +68,18 @@ const TransactionTable = ({ transactions, currentUserId }) => {
                 )}
               </TableCell>
               <TableCell className="font-medium">{transaction.id}</TableCell>
-              <TableCell>{transaction.sender}</TableCell>
-              <TableCell>{transaction.receiver}</TableCell>
+              <TableCell>
+                <div>
+                  <div className="font-medium">{transaction.sender.name}</div>
+                  <div className="text-sm text-muted-foreground">@{transaction.sender.account}</div>
+                </div>
+              </TableCell>
+              <TableCell>
+                <div>
+                  <div className="font-medium">{transaction.receiver.name}</div>
+                  <div className="text-sm text-muted-foreground">@{transaction.receiver.account}</div>
+                </div>
+              </TableCell>
               <TableCell 
                 className={type === 'incoming' || type === 'top-up' ? 'text-green-500' : 'text-red-500'}
               >
@@ -71,7 +87,7 @@ const TransactionTable = ({ transactions, currentUserId }) => {
               </TableCell>
               <TableCell>{transaction.currency}</TableCell>
               <TableCell>{transaction.cause}</TableCell>
-              <TableCell>{formatDate(transaction.created_at)}</TableCell>
+              <TableCell>{formatDate(transaction.created_at_time)}</TableCell>
             </TableRow>
           )
         })}

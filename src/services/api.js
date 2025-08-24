@@ -1,4 +1,3 @@
-// src/services/api.js
 import axios from 'axios'
 
 const API_BASE_URL = 'http://localhost:3000'
@@ -10,57 +9,67 @@ export const api = axios.create({
   },
 })
 
-// Time API
-export const getServerTime = async () => {
-  const response = await api.get('/time')
-  return response.data.time
+// Helper function to process API responses efficiently
+const processResponse = (response) => {
+  if (!response || !response.data) return null;
+  
+  return response.data;
 }
 
-// Transactions API
-export const getTransactionsByUser = async (userId, page = 1) => {
+// Time API
+export const getServerTime = async () => {
   try {
-    const response = await api.get(`/transactions/find-by-user?userId=${userId}&p=${page}`)
-    
-    // Handle different response formats
-    if (response.data && Array.isArray(response.data.transactions)) {
-      return {
-        transactions: response.data.transactions,
-        totalPages: response.data.totalPages || 1
-      }
-    } else if (Array.isArray(response.data)) {
-      // If the API returns just an array, assume it's all transactions
-      return {
-        transactions: response.data,
-        totalPages: 1
-      }
-    } else {
-      return { transactions: [], totalPages: 1 }
-    }
+    const response = await api.get('/time');
+    console.log("dvid", response.data);
+    return response.data.time;
   } catch (error) {
-    console.error('Error fetching transactions:', error)
-    return { transactions: [], totalPages: 1 }
+    console.error('Error fetching server time:', error);
+    throw error;
   }
 }
 
-export const searchTransactions = async (query, userId) => {
+// Transactions API
+export const getTransactionsByUser = async (page = 1) => {
   try {
-    const response = await api.post('/transactions/search', {
-      query,
-      userId,
-    })
+    const response = await api.get(`/transactions/find-by-user?p=${page}`);
+    const processedData = processResponse(response);
     
-    // Handle different response formats
-    if (Array.isArray(response.data)) {
-      return response.data
-    } else if (response.data && Array.isArray(response.data.transactions)) {
-      return response.data.transactions
-    } else if (response.data && Array.isArray(response.data.results)) {
-      return response.data.results
+    return processedData || { 
+      data: [], 
+      lastPage: 1, 
+      total: 0, 
+      perPage: 15,
+      incomingSum: 0,
+      outgoingSum: 0
+    };
+  } catch (error) {
+    console.error('Error fetching transactions:', error);
+    return { 
+      data: [], 
+      lastPage: 1, 
+      total: 0, 
+      perPage: 15,
+      incomingSum: 0,
+      outgoingSum: 0
+    };
+  }
+}
+
+export const searchTransactions = async (query) => {
+  try {
+    const response = await api.post('/transactions/search', { query });
+    const processedData = processResponse(response);
+    
+    // Search might return a different format, so we need to handle both cases
+    if (processedData && Array.isArray(processedData.data)) {
+      return processedData.data;
+    } else if (Array.isArray(processedData)) {
+      return processedData;
     } else {
-      return []
+      return [];
     }
   } catch (error) {
-    console.error('Error searching transactions:', error)
-    return []
+    console.error('Error searching transactions:', error);
+    return [];
   }
 }
