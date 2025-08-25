@@ -90,7 +90,9 @@ The application will be available at `http://localhost:5173`
 
 Here's a preview of the dashboard that interacts with this API:
 
-![Dashboard Preview](src/assets/dashboard.jpg)
+
+https://github.com/user-attachments/assets/66cfcea3-c8bc-4dc8-99fc-0a43a5a0d695
+
 
 
 ## 🏗 Project Structure
