@@ -1,7 +1,6 @@
 import { useEffect, useCallback, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { debounce } from "lodash"
-
 import TransactionTable from "./TransactionTable"
 import TransactionCards from "./TransactionCards"
 import TransactionPagination from "./TransactionPagination"
