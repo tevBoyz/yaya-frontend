@@ -86,6 +86,13 @@ yarn dev
 
 The application will be available at `http://localhost:5173`
 
+## 📸 Dashboard Preview
+
+Here's a preview of the dashboard that interacts with this API:
+
+![Dashboard Preview](src/assets/dashboard.jpg)
+
+
 ## 🏗 Project Structure
 
 ```
