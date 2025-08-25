@@ -1,6 +1,10 @@
 import axios from 'axios'
 
-const API_BASE_URL = 'http://localhost:3000'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'
+
+if (!import.meta.env.VITE_API_BASE_URL) {
+  console.warn('VITE_API_BASE_URL environment variable is not set. Using default:', API_BASE_URL);
+}
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
@@ -9,7 +13,29 @@ export const api = axios.create({
   },
 })
 
-// Helper function to process API responses efficiently
+
+api.interceptors.request.use(
+  (config) => {
+    console.log(`Making ${config.method?.toUpperCase()} request to: ${config.url}`);
+    return config;
+  },
+  (error) => {
+    console.error('Request error:', error);
+    return Promise.reject(error);
+  }
+);
+
+api.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    console.error('API Error:', error.response?.status, error.response?.data);
+    return Promise.reject(error);
+  }
+);
+
+
 const processResponse = (response) => {
   if (!response || !response.data) return null;
   
@@ -55,6 +81,7 @@ export const getTransactionsByUser = async (page = 1) => {
   }
 }
 
+//Search Transactions API
 export const searchTransactions = async (query) => {
   try {
     const response = await api.post('/transactions/search', { query });
