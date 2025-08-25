@@ -90,7 +90,7 @@ The application will be available at `http://localhost:5173`
 
 Here's a preview of the dashboard that interacts with this API:
 
-![Dashboard Preview](src/assets/demo.mp4)
+<video src="src/assets/demo.mp4" controls><video/>
 
 
 ## 🏗 Project Structure
