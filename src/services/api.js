@@ -18,7 +18,7 @@ export const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    console.log(`Making ${config.method?.toUpperCase()} request to: ${config.url}`);
+    // console.log(`Making ${config.method?.toUpperCase()} request to: ${config.url}`);
     return config;
   },
   (error) => {
@@ -37,7 +37,6 @@ api.interceptors.response.use(
   }
 );
 
-
 const processResponse = (response) => {
   if (!response || !response.data) return null;
   
@@ -48,7 +47,6 @@ const processResponse = (response) => {
 export const getServerTime = async () => {
   try {
     const response = await api.get('/time');
-    console.log("dvid", response.data);
     return response.data.time;
   } catch (error) {
     console.error('Error fetching server time:', error);

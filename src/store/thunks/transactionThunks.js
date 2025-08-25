@@ -21,7 +21,6 @@ export const fetchTransactions = (page) => async (dispatch) => {
   try {
     dispatch(setLoading(true))
     const data = await getTransactionsByUser(page)
-    console.log("fromThunks", data)
     dispatch(setTransactions(data))
   } catch (error) {
     dispatch(setError('Failed to fetch transactions'))
