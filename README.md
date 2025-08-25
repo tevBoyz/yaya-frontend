@@ -65,10 +65,12 @@ VITE_API_BASE_URL=http://localhost:3000
 Before running the frontend, you need to start the Yaya API:
 
 ```
-Follow Readme file on the YAYA-API repository to clone and run the backend.
+# Follow Readme file on the YAYA-API repository to clone and run the backend.
+# Repo Link: 
+https://github.com/tevBoyz/yaya-api
 ```
 
-Once the API is running on `http://localhost:3000`
+Once the API is running on `http://localhost:3000` .... **Go to step 5**
 
 
 ### 5. Start the Frontend Application
@@ -244,4 +246,4 @@ This will provide additional console logging for API calls and state changes.
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 
-**Note**: This application is designed to work with the Yaya Wallet API. Ensure the API server is running and properly configured before using the frontend application.
+**Note**: This application is designed to work with the Yaya API. Ensure the API server is running and properly configured before using the frontend application.
