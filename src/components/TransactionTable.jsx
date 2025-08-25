@@ -10,19 +10,16 @@ import {
 import { ArrowUp, ArrowDown } from "lucide-react"
 
 const TransactionTable = ({ transactions, currentUserId }) => {
-  // Memoize the processed transactions
   const safeTransactions = useMemo(() => 
     Array.isArray(transactions) ? transactions : []
   , [transactions])
   
-  // Memoize the transaction type calculation
   const getTransactionType = useCallback((transaction) => {
     if (transaction.is_topup) return 'top-up';
     if (transaction.is_outgoing_transfer) return 'outgoing';
     return transaction.receiver.account === currentUserId ? 'incoming' : 'outgoing';
   }, [currentUserId])
 
-  // Memoize date formatting
   const formatDate = useCallback((timestamp) => {
     return new Date(timestamp * 1000).toLocaleDateString('en-US', {
       year: 'numeric',

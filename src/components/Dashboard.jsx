@@ -1,4 +1,3 @@
-// src/components/Dashboard.jsx
 import { useEffect, useCallback, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { debounce } from "lodash"
@@ -37,20 +36,22 @@ const Dashboard = () => {
     dispatch(fetchTransactions(1))
   }, [dispatch])
 
+
+  //update server time realtime
   useEffect(() => {
     if (serverTime) {
       const serverDate = new Date(serverTime)
       setLiveTime(serverDate)
 
       const interval = setInterval(() => {
-        setLiveTime((prev) => new Date(prev.getTime() + 1000)) // increment by 1s
+        setLiveTime((prev) => new Date(prev.getTime() + 1000)) 
       }, 1000)
 
       return () => clearInterval(interval)
     }
   }, [serverTime])
 
-  // Debounced search to prevent rapid API calls
+  // debounce function to controll multi api requests 
   const debouncedSearch = useCallback(
     debounce((searchTerm) => {
       if (searchTerm.trim()) {
@@ -64,10 +65,12 @@ const Dashboard = () => {
     [dispatch]
   )
 
+  // search function
   const handleSearch = (searchTerm) => {
     debouncedSearch(searchTerm)
   }
 
+  // pagination handler for a page request
   const handlePageChange = useCallback((page) => {
     dispatch(setCurrentPage(page))
     if (!isSearchMode) {
@@ -75,21 +78,21 @@ const Dashboard = () => {
     }
   }, [dispatch, isSearchMode])
 
+  // refresh handler
   const handleRefresh = useCallback(() => {
     dispatch(clearSearch())
     dispatch(fetchTransactions(1))
     dispatch(fetchServerTime())
   }, [dispatch])
 
-  // Safely get display transactions
   const displayTransactions = isSearchMode ? (searchResults || []) : (transactions || [])
   
-  // Safely check if search results are empty
   const isSearchEmpty = isSearchMode && (!searchResults || searchResults.length === 0) && !isLoading
 
   return (
     <div className="container mx-auto p-4 space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <img className="h-12 cursor-pointer" src="/yaya.png" alt="Yaya Logo" onClick={handleRefresh}/>
         <div>
           <h1 className="text-3xl font-bold">Transaction Dashboard</h1>
           {serverTime && (
@@ -107,15 +110,15 @@ const Dashboard = () => {
         </div>
       </div>
 
-  
-
+      {/* Error bar if fetch fails */}
       {error && (
         <div className="bg-destructive/15 text-destructive p-3 rounded-md">
           {error}
         </div>
       )}
 
-      <div className="flex justify-between items-center">
+      {/* Search bar */}
+      <div className="flex justify-center items-center">
         <SearchBar onSearch={handleSearch} />
       </div>
 
@@ -128,27 +131,26 @@ const Dashboard = () => {
         </div>
       )}
 
+      {/* Loading animation if transactions are being fetched */}
       {isLoading ? (
         <div className="flex justify-center items-center h-64">
           <ReloadIcon className="h-8 w-8 animate-spin" />
         </div>
       ) : (
         <>
-          {/* Desktop Table */}
           <div className="hidden md:block">
+            {/* Table view in desktop mode */}
             <TransactionTable 
               transactions={displayTransactions} 
               currentUserId={CURRENT_USER_ID} 
             />
           </div>
-
-          {/* Mobile Cards */}
+          {/* Card view in mobile mode */}
           <TransactionCards 
             transactions={displayTransactions} 
             currentUserId={CURRENT_USER_ID} 
           />
-
-          {/* Pagination - Show for both normal view and search if we have multiple pages */}
+          {/* Pagination area */}
           {(totalPages > 1) && (
             <div className="flex justify-center mt-6">
               <TransactionPagination

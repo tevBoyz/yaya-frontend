@@ -1,17 +1,18 @@
-// src/components/TransactionCards.jsx
 import { ArrowUp, ArrowDown } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 const TransactionCards = ({ transactions, currentUserId }) => {
-  // Ensure transactions is always an array
+  // Make sure transactions is always an array
   const safeTransactions = Array.isArray(transactions) ? transactions : []
   
+  //Get transaction type from data on server
   const getTransactionType = (transaction) => {
     if (transaction.is_topup) return 'top-up';
     if (transaction.is_outgoing_transfer) return 'outgoing';
     return transaction.receiver.account === currentUserId ? 'incoming' : 'outgoing';
   }
 
+  // convert ms time to Aug 24, 2025, 02:01 PM
   const formatDate = (timestamp) => {
     return new Date(timestamp * 1000).toLocaleDateString('en-US', {
       year: 'numeric',

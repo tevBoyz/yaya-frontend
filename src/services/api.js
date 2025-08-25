@@ -1,11 +1,13 @@
 import axios from 'axios'
 
+//fetch base url from .env file
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'
 
 if (!import.meta.env.VITE_API_BASE_URL) {
   console.warn('VITE_API_BASE_URL environment variable is not set. Using default:', API_BASE_URL);
 }
 
+//initialize axios using base url
 export const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
@@ -42,7 +44,7 @@ const processResponse = (response) => {
   return response.data;
 }
 
-// Time API
+// Time API caller
 export const getServerTime = async () => {
   try {
     const response = await api.get('/time');
@@ -54,7 +56,7 @@ export const getServerTime = async () => {
   }
 }
 
-// Transactions API
+// Transactions API caller
 export const getTransactionsByUser = async (page = 1) => {
   try {
     const response = await api.get(`/transactions/find-by-user?p=${page}`);
@@ -81,13 +83,12 @@ export const getTransactionsByUser = async (page = 1) => {
   }
 }
 
-//Search Transactions API
+//Search Transactions API caller
 export const searchTransactions = async (query) => {
   try {
     const response = await api.post('/transactions/search', { query });
     const processedData = processResponse(response);
     
-    // Search might return a different format, so we need to handle both cases
     if (processedData && Array.isArray(processedData.data)) {
       return processedData.data;
     } else if (Array.isArray(processedData)) {
