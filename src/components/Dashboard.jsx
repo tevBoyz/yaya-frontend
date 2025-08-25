@@ -93,7 +93,7 @@ const Dashboard = () => {
     <div className="container mx-auto p-4 space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <img className="h-12 cursor-pointer hidden lg:block" src="/yaya.png" alt="Yaya Logo" onClick={handleRefresh}/>
-        <div className="flex flex-col justify-center">
+        <div className="flex flex-col items-start sm:items-center">
           <h1 className="text-3xl font-bold">Transaction Dashboard</h1>
           {serverTime && (
             <p className="text-sm text-muted-foreground">
