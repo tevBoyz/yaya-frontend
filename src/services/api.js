@@ -15,6 +15,24 @@ export const api = axios.create({
   },
 })
 
+// Authenticate if the current user has autherization to access the api, the token will be stored on local storage for this session
+export const login = (username, password) =>{
+  const token = btoa(`${username}:${password}`);
+  localStorage.setItem("demotoken", token);
+  return token;
+}
+
+// if user has authentication, the returned token will be added in the api config hearders.
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('demotoken');
+  if(token){
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  return config;
+});
+//Since we dont have api authentication this is will not be used... but if we did this would be how it will be implemented.
+
+
 
 api.interceptors.request.use(
   (config) => {
