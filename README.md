@@ -11,7 +11,7 @@ A comprehensive React-based dashboard for viewing and managing transactions thro
 - **Advanced Search**: Find transactions by various criteria
 - **Visual Indicators**: Color-coded transaction types (incoming/outgoing/top-up)
 
-## 🛠 Tech Stack
+## Tech Stack
 
 - **Frontend**: React 18 + Vite
 - **State Management**: Redux Toolkit
@@ -21,7 +21,19 @@ A comprehensive React-based dashboard for viewing and managing transactions thro
 - **Icons**: Lucide React
 - **Environment Management**: dotenv
 
-## 📋 Prerequisites
+## Assumptions
+  - Authentication:
+        There is no login flow. The app assumes a single "current user," which is implicitly defined by the middleware’s API credentials.
+
+  - Data Availability:
+        The middleware API is always available and responds with valid JSON.
+        Network errors are not deeply handled beyond basic error messages.
+
+   - UI/UX:
+        Theme toggle is persisted locally in localStorage.
+
+
+## Prerequisites
 
 Before running this application, ensure you have the following installed:
 
@@ -29,7 +41,7 @@ Before running this application, ensure you have the following installed:
 - **npm** or **yarn** package manager
 - **Git** for version control
 
-## 🚀 Installation & Setup
+## Installation & Setup
 
 ### 1. Clone the Repository
 
@@ -86,7 +98,7 @@ yarn dev
 
 The application will be available at `http://localhost:5173`
 
-## 📸 Dashboard Preview
+## Dashboard Preview
 
 Here's a preview of the dashboard that interacts with this API:
 
@@ -95,7 +107,7 @@ https://github.com/user-attachments/assets/66cfcea3-c8bc-4dc8-99fc-0a43a5a0d695
 
 
 
-## 🏗 Project Structure
+## Project Structure
 
 ```
 src/
@@ -123,7 +135,7 @@ src/
 
 ```
 
-## 🔌 API Integration
+## API Integration
 
 ### Required Endpoints
 
@@ -168,20 +180,20 @@ The API should return transactions in this format:
 }
 ```
 
-## 🎨 Theming
+## Theming
 
 The application supports both light and dark modes:
 
 - Toggle using the theme button in the top-right corner
 - Preferences are saved to localStorage
 
-## 📱 Responsive Design
+## Responsive Design
 
 - **Desktop**: Full table view with all transaction details
 - **Tablet**: Adapted table layout
 - **Mobile**: Card-based layout for better readability on small screens
 
-## 🔧 Customization
+## Customization
 
 ### Adding New Environment Variables
 
@@ -204,7 +216,7 @@ The application uses TailwindCSS. Modify styles in:
 - `src/index.css` for global styles
 - `tailwind.config.js` for theme extensions
 
-## 🚀 Deployment
+## Deployment
 
 ### Build for Production
 
@@ -217,7 +229,7 @@ yarn build
 The built files will be in the `dist/` directory.
 
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -236,13 +248,13 @@ The built files will be in the `dist/` directory.
 
 This will provide additional console logging for API calls and state changes.
 
-## 📝 Scripts
+## Scripts
 
 - `npm run dev` - Start development server
 - `npm run build` - Build for production
 
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feature/amazing-feature`
@@ -250,9 +262,6 @@ This will provide additional console logging for API calls and state changes.
 4. Push to branch: `git push origin feature/amazing-feature`
 5. Open a pull request
 
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 
 **Note**: This application is designed to work with the Yaya API. Ensure the API server is running and properly configured before using the frontend application.
