@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button"
 import { ReloadIcon } from "@radix-ui/react-icons"
 import { fetchServerTime, fetchTransactions, searchTransactionsAction } from "../store/thunks/transactionThunks"
 import { setCurrentPage, clearSearch } from "../store/slices/transactionsSlice"
+import {setError} from "../store/slices/uiSlice"
 
 const CURRENT_USER_ID = "b7a2ed94-cb41-4298-8407-cba5e9575d59"
 
@@ -85,8 +86,13 @@ const Dashboard = () => {
   }, [dispatch])
 
   const displayTransactions = isSearchMode ? (searchResults || []) : (transactions || [])
-  
   const isSearchEmpty = isSearchMode && (!searchResults || searchResults.length === 0) && !isLoading
+
+   useEffect(() => {
+    if(displayTransactions && displayTransactions.length > 0) {
+      dispatch(setError("")) // Clear error if transactions are successfully fetched
+    }
+  }, [displayTransactions, dispatch])
 
   return (
     <div className="container mx-auto p-4 space-y-6">
@@ -110,7 +116,7 @@ const Dashboard = () => {
       </div>
 
       {/* Error bar if fetch fails */}
-      {error && (
+      {error &&(
         <div className="bg-destructive/15 text-destructive p-3 rounded-md">
           {error}
         </div>
