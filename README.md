@@ -2,6 +2,18 @@
 
 A comprehensive React-based dashboard for viewing and managing transactions through the Yaya Wallet API. This application provides a clean, responsive interface for monitoring financial transactions with support for search, pagination, and theme customization.
 
+## Deployment
+
+The project is deployed and accessible online:
+
+**Frontend** (React App) → Vercel: https://yaya-frontend-pi.vercel.app/
+
+**Backend** (NestJS API) → Render: https://yaya-api-fc5p.onrender.com
+
+Both services are live and integrated.
+
+**If you want to run it locally follow the instructions below.**
+
 ## Features
 
 - **Transaction Management**: View, search, and paginate through transactions
@@ -22,16 +34,16 @@ A comprehensive React-based dashboard for viewing and managing transactions thro
 - **Environment Management**: dotenv
 
 ## Assumptions
-  - Authentication:
-        There is no login flow. The app assumes a single "current user," which is implicitly defined by the middleware’s API credentials.
 
-  - Data Availability:
-        The middleware API is always available and responds with valid JSON.
-        Network errors are not deeply handled beyond basic error messages.
+- Authentication:
+  There is no login flow. The app assumes a single "current user," which is implicitly defined by the middleware’s API credentials.
 
-   - UI/UX:
-        Theme toggle is persisted locally in localStorage.
+- Data Availability:
+  The middleware API is always available and responds with valid JSON.
+  Network errors are not deeply handled beyond basic error messages.
 
+- UI/UX:
+  Theme toggle is persisted locally in localStorage.
 
 ## Prerequisites
 
@@ -78,12 +90,11 @@ Before running the frontend, you need to start the Yaya API:
 
 ```
 # Follow Readme file on the YAYA-API repository to clone and run the backend.
-# Repo Link: 
+# Repo Link:
 https://github.com/tevBoyz/yaya-api
 ```
 
 Once the API is running on `http://localhost:3000` .... **Go to step 5**
-
 
 ### 5. Start the Frontend Application
 
@@ -102,10 +113,7 @@ The application will be available at `http://localhost:5173`
 
 Here's a preview of the dashboard that interacts with this API:
 
-
 https://github.com/user-attachments/assets/66cfcea3-c8bc-4dc8-99fc-0a43a5a0d695
-
-
 
 ## Project Structure
 
@@ -204,6 +212,7 @@ The application supports both light and dark modes:
 ### Modifying API Configuration
 
 Edit `src/services/api.js` to change:
+
 - Base URL
 - Timeout settings
 - Default headers
@@ -212,6 +221,7 @@ Edit `src/services/api.js` to change:
 ### Styling Changes
 
 The application uses TailwindCSS. Modify styles in:
+
 - Individual component files
 - `src/index.css` for global styles
 - `tailwind.config.js` for theme extensions
@@ -228,17 +238,18 @@ yarn build
 
 The built files will be in the `dist/` directory.
 
-
 ## Troubleshooting
 
 ### Common Issues
 
 1. **API Connection Errors**
+
    - Ensure the backend API is running
    - Check the `VITE_API_BASE_URL` in your `.env` file
    - Verify CORS settings on the API server
 
 2. **Build Failures**
+
    - Clear node_modules: `rm -rf node_modules && npm install`
    - Check Node.js version: `node --version`
 
@@ -253,7 +264,6 @@ This will provide additional console logging for API calls and state changes.
 - `npm run dev` - Start development server
 - `npm run build` - Build for production
 
-
 ## Contributing
 
 1. Fork the repository
@@ -261,7 +271,5 @@ This will provide additional console logging for API calls and state changes.
 3. Commit changes: `git commit -m 'Add amazing feature'`
 4. Push to branch: `git push origin feature/amazing-feature`
 5. Open a pull request
-
-
 
 **Note**: This application is designed to work with the Yaya API. Ensure the API server is running and properly configured before using the frontend application.
