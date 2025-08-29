@@ -12,6 +12,12 @@ The project is deployed and accessible online:
 
 Both services are live and integrated.
 
+⚠️ Note: Both deployments use free-tier hosting.
+
+- The backend (Render) may go into sleep mode after inactivity and can take 20–60 seconds to spin back up on the first request.
+
+- This can cause some initial delay when testing the endpoints through the frontend or API directly.
+
 **If you want to run it locally follow the instructions below.**
 
 ## Features
